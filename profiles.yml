@@ -1,4 +1,4 @@
-master_data_model:
+project_profile:
   outputs:
     dev:
       dataset: "{{ env_var('DBT_DATASET') }}"
