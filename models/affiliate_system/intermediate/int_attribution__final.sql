@@ -1,13 +1,10 @@
 
-
 {{ config(
     materialized = 'table'
 )}}
 
-
 with final_attribution as (
-select 
-  *
+select *
   , case when e_pv_event_id = event_id then attribution_source
         when new_affid_attribution is null and e_pv_affiliate_id is not null then 'email_affid'
         when new_affid_attribution is not null and e_pv_affiliate_id is not null 
@@ -44,10 +41,8 @@ from {{ ref('int_attribution__add_email') }}
 WHERE email_idx = 1
 )
 
-
 , cast_to_0 as (
-      select 
-            app_id
+      select app_id
             , collector_tstamp
             , event
             , event_id
@@ -108,15 +103,8 @@ WHERE email_idx = 1
             , final_attribution_tstamp
             , funnel_step_id
             , is_paypal_optin
-
       from final_attribution
 )
 
-
-
-
 select *
 from cast_to_0
-order by collector_tstamp desc
-
-

@@ -3,7 +3,6 @@
     materialized = 'table'
 )}}
 
-
 WITH domain_attribution_rank as (
   SELECT 
     c.*
@@ -15,13 +14,11 @@ WITH domain_attribution_rank as (
     , d.page_urlhost as d_pv_page_urlhost
     , d.page_urlpath as d_pv_page_urlpath
     , ROW_NUMBER() OVER ( PARTITION BY c.event_id ORDER BY d.collector_tstamp DESC) AS idx
-
   FROM {{ ref('stg_events__optins_orders')}}  c
   LEFT JOIN {{ ref('stg_events__affiliate_hits')}} d
     ON c.domain_userid = d.domain_userid
     AND c.collector_tstamp > d.collector_tstamp
 )
-
 
 SELECT *
 FROM domain_attribution_rank

@@ -1,11 +1,11 @@
+
 {{ config(
     materialized = 'table'
 )}}
 
-
 WITH conversions AS (
   SELECT 
-    app_id
+    'mbs' as app_id
     , collector_tstamp
     , event
     , event_id
@@ -28,13 +28,12 @@ WITH conversions AS (
     , unstruct_event_com_deangraziosi_affiliate_tracking_2_1_0_2.sub_id as sub_id
     , unstruct_event_com_deangraziosi_clickfunnels_tracking_2_0_2.funnel_step_id as funnel_step_id
     , case when unstruct_event_com_deangraziosi_clickfunnels_tracking_2_0_2.funnel_step_id = 87279813 then 1 else 0 end as is_paypal_optin
-
   FROM {{ source('raw_events', 'events') }} 
   WHERE DATE(collector_tstamp, 'US/Arizona') >= '2024-04-01'
     AND se_action IN ('optin','order')
-    AND app_id = 'MBS'
+    and (page_urlhost in ('gamehaschangedevent.com')
+      or lower(app_id) in ('mbs'))
 )
-
 
 SELECT *
 FROM conversions

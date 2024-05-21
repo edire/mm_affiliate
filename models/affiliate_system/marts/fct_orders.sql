@@ -26,12 +26,6 @@ with orders as (
   
 )
 
-
 select *
 from affiliate_id_numeric
 where numeric_test <> 'error'
-    -- and lower(user_id) not in (
-    --     'kylecmalone@gmail.com' , 'kylemguy@gmail.com' , 'kylemalone321@gmail.com'
-    -- )
-order by collector_tstamp
-

@@ -1,3 +1,4 @@
+
 with optins as (
   SELECT 
     date_az
@@ -17,15 +18,11 @@ with optins as (
     , final_subid_attribution as sub_id
     , count(distinct email) as optins
   from optins
-    group by date_az
+  group by date_az
     , app_id
     , final_affid_attribution
     , final_subid_attribution
 )
 
-
 select *
 from optins_agg
-where date_az >= '2024-04-01'
-order by 1 desc 
-

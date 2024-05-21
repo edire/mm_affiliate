@@ -1,7 +1,7 @@
+
 {{ config(
     materialized = 'table'
 )}}
-
 
 with optins as (
     SELECT 
@@ -13,17 +13,13 @@ with optins as (
     WHERE se_action = 'optin'
 )
 
-
-
 , affiliate_id_numeric as (
   select *
     , case when final_affid_attribution is null then 'already_null' 
         when SAFE_CAST(final_affid_attribution AS INT64) is null then 'error'
         else 'numeric' end as numeric_test
   from optins
-  
 )
-
 
 , join_contact_info as (
   select 
@@ -37,11 +33,7 @@ with optins as (
   left join bbg-platform.analytics.dim_contacts c
     on lower(a.user_id) = lower(c.email)
   where numeric_test <> 'error'
-
 )
 
-
-select 
-  *
+select *
 from join_contact_info
-order by collector_tstamp
