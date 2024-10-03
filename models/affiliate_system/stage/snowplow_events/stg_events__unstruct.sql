@@ -5,9 +5,9 @@
 
 WITH affiliate_hits as (
   SELECT 
-    'mbs' as app_id
+    '{{ env_var("OFFER") }}' as app_id
     , domain_userid 
-    , user_ipaddress 
+    , user_ipaddress
     , collector_tstamp
     , event_id
     , page_urlhost
@@ -18,10 +18,10 @@ WITH affiliate_hits as (
     , geo_region	
     , geo_city
   FROM {{ source('raw_events', 'events') }} 
-  WHERE DATE(collector_tstamp, 'US/Arizona') >= '2024-04-01'
+  WHERE DATE(collector_tstamp, 'US/Arizona') >= '{{ env_var("START_DATE") }}'
     and event = 'unstruct'
-    and (page_urlhost in ('gamehaschangedevent.com')
-      or lower(app_id) in ('mbs'))
+    and (page_urlhost in ('{{ env_var("URL_HOST") }}')
+      or lower(app_id) in ('{{ env_var("OFFER") }}'))
     -- AND unstruct_event_com_deangraziosi_affiliate_tracking_2_1_0_2.affiliate_id IS NOT NULL
     -- AND unstruct_event_com_deangraziosi_affiliate_tracking_2_1_0_2.affiliate_id <> '0'
     and event_name = 'affiliate_tracking_2'
