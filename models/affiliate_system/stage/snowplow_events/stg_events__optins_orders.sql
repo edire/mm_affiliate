@@ -3,7 +3,17 @@
     materialized = 'table'
 )}}
 
-WITH conversions AS (
+WITH url_host_env AS (
+  SELECT '{{ env_var("URL_HOST") }}' AS url_host_str
+)
+
+, url_host_tbl as (
+  SELECT TRIM(url_host_val) AS url_host
+  FROM url_host_env,
+    UNNEST(SPLIT(url_host_str, ',')) AS url_host_val
+)
+
+, conversions AS (
   SELECT 
     '{{ env_var("OFFER") }}' as app_id
     , collector_tstamp
@@ -31,7 +41,7 @@ WITH conversions AS (
   FROM {{ source('raw_events', 'events') }} 
   WHERE DATE(collector_tstamp, 'US/Arizona') >= '{{ env_var("START_DATE") }}'
     AND se_action IN ('optin','order')
-    and (page_urlhost in ('{{ env_var("URL_HOST") }}')
+    and (page_urlhost in (select url_host from url_host_tbl)
       or lower(app_id) in ('{{ env_var("OFFER") }}'))
 )
 
